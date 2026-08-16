@@ -17,6 +17,11 @@ app.use(express.json());
 app.use("/api/auth", userRouter);
 app.use("/api/todos", todoRouter);
 
+// Root route
+app.get("/", (req, res) => {
+    res.json({ message: "ToDo Dashboard Backend is running" });
+});
+
 // MongoDB connection
 mongoose
     .connect(process.env.URL)
