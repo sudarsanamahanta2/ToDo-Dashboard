@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -38,11 +38,11 @@ const Login = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div style={inputGroupStyle}>
-            <label>Username:</label>
+            <label>Email:</label>
             <input
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
               style={inputStyle}
@@ -69,7 +69,7 @@ const Login = () => {
   );
 };
 
-// Style Definitions
+// Inline CSS styles
 const containerStyle = {
   display: 'flex',
   justifyContent: 'center',
