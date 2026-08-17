@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -37,11 +37,11 @@ const Register = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div style={inputGroupStyle}>
-            <label>Username:</label>
+            <label>Name:</label>
             <input
               type="text"
-              name="username"
-              value={formData.username}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               required
               style={inputStyle}
@@ -79,7 +79,7 @@ const Register = () => {
   );
 };
 
-// Inline CSS styles to match standard forms
+// Inline CSS styles
 const containerStyle = {
   display: 'flex',
   justifyContent: 'center',
