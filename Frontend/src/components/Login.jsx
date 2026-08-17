@@ -1,54 +1,72 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Login({ onLogin }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+const Login = () => {
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://todo-backend-4v7l.onrender.com/api/auth/login", {
-        username,
-        password,
+      const response = await fetch('https://todo-dashboard-zjld.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-      localStorage.setItem("token", res.data.token);
-      if (onLogin) onLogin();
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      localStorage.setItem('token', data.token);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials");
+      setError(err.message);
     }
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Username: </label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-          />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Password: </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-          />
-        </div>
-        <button type="submit" style={{ width: "100%", padding: "10px", cursor: "pointer" }}>Login</button>
-      </form>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <h2>Login</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div style={inputGroupStyle}>
+            <label>Username:</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+          </div>
+          <div style={inputGroupStyle}>
+            <label>Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+          </div>
+          <button type="submit" style={buttonStyle}>Login</button>
+        </form>
+        <p style={{ marginTop: '15px', textAlign: 'center' }}>
+          Don't have an account? <Link to="/register" style={{ color: '#007bff' }}>Register here</Link>
+        </p>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;
