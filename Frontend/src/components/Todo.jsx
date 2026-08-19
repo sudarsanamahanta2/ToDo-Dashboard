@@ -7,11 +7,16 @@ function Todo() {
 
   const token = localStorage.getItem("token");
 
+  const API_URL = "https://todo-backend-4v7l.onrender.com/api/todos";
+
   const fetchTodos = async () => {
     try {
-      const res = await axios.get("https://todo-backend-4v7l.onrender.com/api/todos", {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await axios.get(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       setTodos(res.data);
     } catch (err) {
       console.error("Failed to fetch todos", err);
@@ -24,13 +29,20 @@ function Todo() {
 
   const addTodo = async (e) => {
     e.preventDefault();
+
     if (!title.trim()) return;
+
     try {
       await axios.post(
-        "http://localhost:5000/api/todos",
+        API_URL,
         { title },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
       setTitle("");
       fetchTodos();
     } catch (err) {
@@ -40,9 +52,12 @@ function Todo() {
 
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/todos/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.delete(`${API_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       fetchTodos();
     } catch (err) {
       console.error("Failed to delete todo", err);
@@ -55,26 +70,80 @@ function Todo() {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "50px auto", padding: "20px" }}>
-      <button onClick={logout} style={{ float: "right", padding: "8px 12px" }}>Logout</button>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "50px auto",
+        padding: "20px",
+      }}
+    >
+      <button
+        onClick={logout}
+        style={{
+          float: "right",
+          padding: "8px 12px",
+        }}
+      >
+        Logout
+      </button>
+
       <h2>My To-Do Dashboard</h2>
-      
-      <form onSubmit={addTodo} style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+
+      <form
+        onSubmit={addTodo}
+        style={{
+          display: "flex",
+          gap: "10px",
+          marginBottom: "20px",
+        }}
+      >
         <input
           type="text"
           placeholder="New task..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={{ flex: 1, padding: "8px" }}
+          style={{
+            flex: 1,
+            padding: "8px",
+          }}
         />
-        <button type="submit" style={{ padding: "8px 16px" }}>Add</button>
+
+        <button
+          type="submit"
+          style={{
+            padding: "8px 16px",
+          }}
+        >
+          Add
+        </button>
       </form>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+        }}
+      >
         {todos.map((todo) => (
-          <li key={todo._id} style={{ display: "flex", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid #ddd" }}>
+          <li
+            key={todo._id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "10px",
+              borderBottom: "1px solid #ddd",
+            }}
+          >
             <span>{todo.title}</span>
-            <button onClick={() => deleteTodo(todo._id)} style={{ color: "red" }}>Delete</button>
+
+            <button
+              onClick={() => deleteTodo(todo._id)}
+              style={{
+                color: "red",
+              }}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
